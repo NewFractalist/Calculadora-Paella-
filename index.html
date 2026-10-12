@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora de Paella Valenciana</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #d9381e;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        .slider-box {
+            background: #fff5f3;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #ffd6d0;
+        }
+        .slider-label {
+            font-size: 0.9rem;
+            color: #444;
+            font-weight: 600;
+        }
+        .slider-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #d9381e;
+            margin: 4px 0;
+        }
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #ffd6d0;
+            outline: none;
+            -webkit-appearance: none;
+            accent-color: #d9381e;
+            margin-top: 10px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #d9381e;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .listado {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            border-left: 4px solid #d9381e;
+        }
+        .item-nombre {
+            color: #333;
+            font-weight: 500;
+        }
+        .item-cantidad {
+            font-weight: bold;
+            color: #d9381e;
+            text-align: right;
+        }
+        .nota {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            font-size: 0.83rem;
+            color: #555;
+            margin-top: 20px;
+            border-radius: 8px;
+            line-height: 1.4;
+        }
+        .nota b {
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🥘 Paella Valenciana</h2>
+        <div class="subtitle">Calculadora tradicional para arroz redondo La Fallera</div>
+
+        <div class="slider-box">
+            <div class="slider-label">NÚMERO DE COMENSALES</div>
+            <div class="slider-value" id="valPersonas">8</div>
+            <input type="range" id="inputPersonas" min="1" max="30" value="8" oninput="actualizarCalculo()">
+        </div>
+
+        <div class="listado" id="listaIngredientes">
+            <!-- Se llena dinámicamente con JavaScript -->
+        </div>
+
+        <div class="nota">
+            <b>💡 Nota sobre el agua:</b> El agua inicial incluye la evaporación de 20 minutos de hervor previo de la carne y la verdura. Al final, el caldo se reducirá exactamente a la proporción de 3 partes de agua por 1 de arroz (justo por debajo de los remaches de las asas).
+        </div>
+
+        <div class="footer">Auténtica Receta Valenciana • 100g de arroz por persona</div>
+    </div>
+
+    <script>
+        function actualizarCalculo() {
+            const p = parseInt(document.getElementById('inputPersonas').value);
+            document.getElementById('valPersonas').innerText = p;
+
+            // Cálculos proporcionales
+            const arroz = p * 100;
+            const pollo = p * 130;
+            const conejo = p * 100;
+            const bajoqueta = p * 45;
+            const garrofo = p * 22;
+            const tomate = p * 28;
+            const aceiteMl = p * 22;
+            const aceiteG = Math.round(aceiteMl * 0.918);
+            const aguaInicial = (p * 0.475).toFixed(2);
+            const aguaFinal = (p * 0.3).toFixed(2);
+            const sal = p * 5;
+
+            const ingredientes = [
+                { nombre: "Arroz (La Fallera)", cantidad: arroz + " g" },
+                { nombre: "Pollo con hueso", cantidad: pollo + " g" },
+                { nombre: "Conejo con hueso", cantidad: conejo + " g" },
+                { nombre: "Bajoqueta (Judía plana)", cantidad: bajoqueta + " g" },
+                { nombre: "Garrofó", cantidad: garrofo + " g" },
+                { nombre: "Tomate triturado", cantidad: tomate + " g" },
+                { nombre: "Aceite de oliva virgen", cantidad: aceiteMl + " ml (" + aceiteG + " g)" },
+                { nombre: "Agua inicial (al empezar)", cantidad: aguaInicial + " L" },
+                { nombre: "Caldo necesario (al echar arroz)", cantidad: aguaFinal + " L" },
+                { nombre: "Sal", cantidad: sal + " g" },
+                { nombre: "Azafrán, pimentón y romero", cantidad: "Al gusto" }
+            ];
+
+            let html = "";
+            ingredientes.forEach(ing => {
+                html += `
+                    <div class="item">
+                        <span class="item-nombre">${ing.nombre}</span>
+                        <span class="item-cantidad">${ing.cantidad}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('listaIngredientes').innerHTML = html;
+        }
+
+        // Ejecutar al cargar la página
+        actualizarCalculo();
+    </script>
+</body>
+</html>
